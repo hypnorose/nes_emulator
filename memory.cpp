@@ -9,6 +9,8 @@ namespace PPU{
 	void writeOAMADDR(unsigned char value);
 	unsigned char readOAMDATA();
 	unsigned char readPPUSTATUS();
+	void resetKeyPlace();
+	unsigned char readCtrl();
 };
 namespace Memory{
 	
@@ -21,6 +23,11 @@ namespace Memory{
 		}
 		else if(addr == 0x2004){
 			return PPU::readOAMDATA();
+		}
+		else if(addr == 0x4016){
+			unsigned char ret = PPU::readCtrl();
+			//printf("%X\n",ret);
+			return ret | 0x40;
 		}
 		if(addr <= 0x2000)return RAM[addr%0x800];
 		return RAM[addr];
@@ -51,6 +58,10 @@ namespace Memory{
 		}
 		else if(addr == 0x4014){
 			PPU::writeOAMDMA(value);
+		}
+		else if(addr == 0x4016){
+			PPU::resetKeyPlace();
+
 		}
 		else if(addr < 0x2000 ) RAM[addr%0x800] = value;
 		else{
